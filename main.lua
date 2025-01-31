@@ -67,8 +67,8 @@ local function isHerb(ref)
     return false
 end
 
-
 -- Update and serialize the reference's HerbalismSwitch.
+--- @param ref tes3reference
 local function updateHerbalismSwitch(ref, index)
     -- valid indices are: 0=default, 1=picked, 2=spoiled
 
@@ -77,6 +77,10 @@ local function updateHerbalismSwitch(ref, index)
 
     local switchNode = sceneNode:getObjectByName("HerbalismSwitch")
     if not switchNode then return end
+    if (switchNode.switchIndex == nil) then
+        mwse.log("Problematic mesh '%s': HerbalismSwitch is not of type NiSwitchNode.", ref.object.mesh)
+        return
+    end
 
     -- bounds check in case mesh does not implement a spoiled state
     index = math.min(index, #switchNode.children - 1)
