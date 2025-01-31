@@ -39,7 +39,7 @@ end
 
 -- Register the mod config menu (using bultin mwse.mcm).
 event.register("modConfigReady", function()
-    dofile("Data Files\\MWSE\\mods\\graphicHerbalism\\mcm.lua")
+    dofile("graphicHerbalism.mcm")
 end)
 
 
