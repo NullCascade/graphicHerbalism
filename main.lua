@@ -204,24 +204,6 @@ local function getVisibleEffectsCount()
 end
 
 
--- Get the full display name of a magic effect, including attributes/skills.
-local function getEffectName(effect, stat)
-    local statName
-    if effect.targetsAttributes then
-        statName = tes3.findGMST(888 + stat).value
-    elseif effect.targetsSkills then
-        statName = tes3.findGMST(896 + stat).value
-    end
-
-    local effectName = tes3.findGMST(1283 + effect.id).value
-    if statName then
-        return effectName:match("%S+") .. " " .. statName
-    else
-        return effectName
-    end
-end
-
-
 -- Called when targeting a herb, adds ingredient information to the tooltip.
 local function onTooltipDrawn(e)
     local ref = e.reference
@@ -260,7 +242,6 @@ local function onTooltipDrawn(e)
 
         for i = 1, 4 do
             local effect = tes3.getMagicEffect(ingred.effects[i])
-            local target = math.max(ingred.effectAttributeIds[i], ingred.effectSkillIds[i])
 
             local block = parent:createBlock{id=GUI_ID[i]}
             block.autoHeight = true
@@ -276,7 +257,12 @@ local function onTooltipDrawn(e)
                 image.wrapText = false
                 image.borderLeft = 4
 
-                local label = block:createLabel{text=getEffectName(effect, target)}
+                local name = tes3.getMagicEffectName({
+                    effect = ingred.effects[i],
+                    attribute = ingred.effectAttributeIds[i],
+                    skill = ingred.effectSkillIds[i],
+                })
+                local label = block:createLabel{text=name}
                 label.wrapText = false
                 label.borderLeft = 4
             end
